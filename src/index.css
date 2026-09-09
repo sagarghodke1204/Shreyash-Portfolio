@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-cyber-bg: #070a13;
+  --color-cyber-surface: #0c101d;
+  --color-cyber-card: #13192b;
+  --color-cyber-border: #1e2942;
+  --color-cyber-border-glow: #2e3e65;
+  --color-cyber-teal: #00f2fe;
+  --color-cyber-blue: #4facfe;
+  --color-cyber-green: #10b981;
+  --color-cyber-orange: #f97316;
+  
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-sans: 'Inter', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-scanline: scanline 8s linear infinite;
+  --animate-blink: blink 1s step-end infinite;
+}
+
+@keyframes scanline {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Custom base styles */
+@layer base {
+  body {
+    background-color: var(--color-cyber-bg);
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+  
+  /* Selection styling */
+  ::selection {
+    background-color: rgba(0, 242, 254, 0.2);
+    color: var(--color-cyber-teal);
+  }
+}
+
+/* Technical / Cyber aesthetic utility classes */
+.dot-grid {
+  background-image: radial-gradient(rgba(34, 46, 76, 0.45) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.radar-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.radar-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-cyber-teal), transparent);
+  animation: scanline 4s linear infinite;
+}
+
+.tech-border {
+  position: relative;
+}
+
+.tech-border::before, .tech-border::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--color-cyber-teal);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.tech-border-top-left::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.tech-border-bottom-right::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cyber-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-cyber-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cyber-teal);
+}
+
+/* Glow effects */
+.glow-teal {
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+}
+
+.glow-teal-hover:hover {
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+  border-color: var(--color-cyber-teal);
+}
+
+/* Terminal styled typing caret */
+.caret-blink::after {
+  content: ' _';
+  animation: blink 1s step-end infinite;
+  color: var(--color-cyber-teal);
+}
