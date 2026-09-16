@@ -207,8 +207,13 @@ app.put('/api/profile', authenticateAdmin, async (req, res) => {
 // Experiences CRUD
 app.post('/api/experiences', authenticateAdmin, async (req, res) => {
   try {
-    const { data, error } = await supabase.from('experiences').insert(req.body).select().single();
-    if (error) throw error;
+    let { data, error } = await supabase.from('experiences').insert(req.body).select().single();
+    if (error && error.message && error.message.includes('highlight_video_urls')) {
+      const { highlight_video_urls, ...withoutVideo } = req.body;
+      const retry = await supabase.from('experiences').insert(withoutVideo).select().single();
+      if (retry.error) throw retry.error;
+      data = retry.data;
+    } else if (error) throw error;
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -217,8 +222,13 @@ app.post('/api/experiences', authenticateAdmin, async (req, res) => {
 
 app.put('/api/experiences/:id', authenticateAdmin, async (req, res) => {
   try {
-    const { data, error } = await supabase.from('experiences').update(req.body).eq('id', req.params.id).select().single();
-    if (error) throw error;
+    let { data, error } = await supabase.from('experiences').update(req.body).eq('id', req.params.id).select().single();
+    if (error && error.message && error.message.includes('highlight_video_urls')) {
+      const { highlight_video_urls, ...withoutVideo } = req.body;
+      const retry = await supabase.from('experiences').update(withoutVideo).eq('id', req.params.id).select().single();
+      if (retry.error) throw retry.error;
+      data = retry.data;
+    } else if (error) throw error;
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

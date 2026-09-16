@@ -129,6 +129,12 @@ export const api = {
     }
 
     const { data, error } = await supabase.from('experiences').insert(exp).select().single();
+    if (error && error.message && error.message.includes('highlight_video_urls')) {
+      const { highlight_video_urls, ...expWithoutVideo } = exp;
+      const retry = await supabase.from('experiences').insert(expWithoutVideo).select().single();
+      if (retry.error) throw retry.error;
+      return retry.data;
+    }
     if (error) throw error;
     return data;
   },
@@ -149,6 +155,12 @@ export const api = {
     }
 
     const { data, error } = await supabase.from('experiences').update(exp).eq('id', id).select().single();
+    if (error && error.message && error.message.includes('highlight_video_urls')) {
+      const { highlight_video_urls, ...expWithoutVideo } = exp;
+      const retry = await supabase.from('experiences').update(expWithoutVideo).eq('id', id).select().single();
+      if (retry.error) throw retry.error;
+      return retry.data;
+    }
     if (error) throw error;
     return data;
   },
