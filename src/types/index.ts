@@ -25,7 +25,8 @@ export interface Experience {
   start_date: string;
   end_date: string | null;
   is_current: boolean;
-  highlights: ExperienceHighlight[];
+  highlights: string[];
+  highlight_video_urls: string[];
   display_order: number;
   created_at: string;
 }

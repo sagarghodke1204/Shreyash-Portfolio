@@ -24,13 +24,14 @@ export const fallbackExperiences: Experience[] = [
     end_date: 'Present',
     is_current: true,
     highlights: [
-      { text: 'VLM-based robotic perception pipeline using audio input to identify target objects, perform recognition and 3D localization, and enable robots to search across multi-floor buildings and navigate toward targets.', video_url: '#' },
-      { text: 'Landmark-based navigation with zero-shot object detection and prompt-based segmentation.', video_url: '#' },
-      { text: 'Work involving quadruped, legged, and humanoid platforms such as Go2 and B2-class robots.', video_url: '#' },
-      { text: 'Approximately 20 cm navigation accuracy using a monocular camera.', video_url: '#' },
-      { text: '2-finger pick-and-place pipelines for humanoid robots using Vision-Language-Action models.', video_url: '#' },
-      { text: 'Monocular-camera-based VLA pick-and-place for a UR5 robotic arm.', video_url: '#' }
+      'VLM-based robotic perception pipeline using audio input to identify target objects, perform recognition and 3D localization, and enable robots to search across multi-floor buildings and navigate toward targets.',
+      'Landmark-based navigation with zero-shot object detection and prompt-based segmentation.',
+      'Work involving quadruped, legged, and humanoid platforms such as Go2 and B2-class robots.',
+      'Approximately 20 cm navigation accuracy using a monocular camera.',
+      '2-finger pick-and-place pipelines for humanoid robots using Vision-Language-Action models.',
+      'Monocular-camera-based VLA pick-and-place for a UR5 robotic arm.'
     ],
+    highlight_video_urls: ['#', '#', '#', '#', '#', '#'],
     display_order: 1,
     created_at: new Date().toISOString()
   },
@@ -43,14 +44,15 @@ export const fallbackExperiences: Experience[] = [
     end_date: 'December 2025',
     is_current: false,
     highlights: [
-      { text: 'Developed humanoid-based restaurant management systems.', video_url: '#' },
-      { text: 'People tracking.', video_url: '#' },
-      { text: 'Customer flow understanding.', video_url: '#' },
-      { text: 'Order management.', video_url: '#' },
-      { text: 'Simulation pipelines for humanoid-assisted restaurant operations.', video_url: '#' },
-      { text: 'Inventory handling and workflow management.', video_url: '#' },
-      { text: 'Service-robot workflow design.', video_url: '#' }
+      'Developed humanoid-based restaurant management systems.',
+      'People tracking.',
+      'Customer flow understanding.',
+      'Order management.',
+      'Simulation pipelines for humanoid-assisted restaurant operations.',
+      'Inventory handling and workflow management.',
+      'Service-robot workflow design.'
     ],
+    highlight_video_urls: ['#', '#', '#', '#', '#', '#', '#'],
     display_order: 2,
     created_at: new Date().toISOString()
   },
@@ -63,9 +65,10 @@ export const fallbackExperiences: Experience[] = [
     end_date: 'October 2025',
     is_current: false,
     highlights: [
-      { text: 'Mission Planner: Mission planner for an aircraft carrying Electro Optical, IR and Synthetic Aperture Radar imaging sensors. Optimized imaging flight paths for multiple targets. Project submission completed and currently being patented by the senior team.', video_url: '#' },
-      { text: 'End-to-End Autonomous Navigation for Vision Language Model: Developed edge-deployable models on NVIDIA Jetson AGX. Few-shot and zero-shot generalization. Test-time adaptation using VLMs. Domain generalization. Sim-to-real adaptation. VLM fine-tuning and TRL-based supervised fine-tuning.', video_url: '#' }
+      'Mission Planner: Mission planner for an aircraft carrying Electro Optical, IR and Synthetic Aperture Radar imaging sensors. Optimized imaging flight paths for multiple targets. Project submission completed and currently being patented by the senior team.',
+      'End-to-End Autonomous Navigation for Vision Language Model: Developed edge-deployable models on NVIDIA Jetson AGX. Few-shot and zero-shot generalization. Test-time adaptation using VLMs. Domain generalization. Sim-to-real adaptation. VLM fine-tuning and TRL-based supervised fine-tuning.'
     ],
+    highlight_video_urls: ['#', '#'],
     display_order: 3,
     created_at: new Date().toISOString()
   },
@@ -78,10 +81,11 @@ export const fallbackExperiences: Experience[] = [
     end_date: 'June 2024',
     is_current: false,
     highlights: [
-      { text: 'ADAS: Remote control, follow-the-car, overtake scenarios. Implementation on Honda car.', video_url: '#' },
-      { text: 'Python package for industrial servo motor control using Modbus RTU.', video_url: '#' },
-      { text: 'Sensor and actuator integration: Encoder, Ultrasonic sensors, Acceleration/brake control systems.', video_url: '#' }
+      'ADAS: Remote control, follow-the-car, overtake scenarios. Implementation on Honda car.',
+      'Python package for industrial servo motor control using Modbus RTU.',
+      'Sensor and actuator integration: Encoder, Ultrasonic sensors, Acceleration/brake control systems.'
     ],
+    highlight_video_urls: ['#', '#', '#'],
     display_order: 4,
     created_at: new Date().toISOString()
   },
@@ -94,11 +98,12 @@ export const fallbackExperiences: Experience[] = [
     end_date: 'January 2023',
     is_current: false,
     highlights: [
-      { text: 'Trajectory planning for Level-5 autonomous car in highway scenarios.', video_url: '#' },
-      { text: 'Camera-based navigation using Oak-D Pro camera.', video_url: '#' },
-      { text: 'Isaac Sim simulation and CARLA verification.', video_url: '#' },
-      { text: 'Implementation on a four-wheeler with multiple sensors.', video_url: '#' }
+      'Trajectory planning for Level-5 autonomous car in highway scenarios.',
+      'Camera-based navigation using Oak-D Pro camera.',
+      'Isaac Sim simulation and CARLA verification.',
+      'Implementation on a four-wheeler with multiple sensors.'
     ],
+    highlight_video_urls: ['#', '#', '#', '#'],
     display_order: 5,
     created_at: new Date().toISOString()
   }

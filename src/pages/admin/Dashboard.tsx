@@ -970,7 +970,14 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
       setEndDate(editingExp.end_date || '');
       setIsCurrent(editingExp.is_current || false);
       setDisplayOrder(editingExp.display_order ?? 0);
-      setHighlights(editingExp.highlights || []);
+      const rawHighlights = editingExp.highlights || [];
+      const rawVideoUrls = editingExp.highlight_video_urls || [];
+      setHighlights(
+        rawHighlights.map((h: any, i: number) => ({
+          text: typeof h === 'string' ? h : (h?.text || String(h)),
+          video_url: rawVideoUrls[i] || (typeof h !== 'string' ? h?.video_url : null) || null
+        }))
+      );
     } else {
       setCompany('');
       setRole('');
@@ -1006,7 +1013,7 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
     setHighlights(highlights.map((h, i) => i === idx ? { ...h, video_url: url || null } : h));
   };
 
-    const handleSaveExp = async (e: React.FormEvent) => {
+  const handleSaveExp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!company || !role || !startDate) {
       showStatus('Company, Role, and Start Date are required.', 'error');
@@ -1022,7 +1029,8 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
         start_date: startDate,
         end_date: isCurrent ? 'Present' : (endDate || null),
         is_current: isCurrent,
-        highlights,
+        highlights: highlights.map(h => h.text),
+        highlight_video_urls: highlights.map(h => h.video_url || ''),
         display_order: displayOrder
       };
 
@@ -1229,16 +1237,24 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
                   [{exp.start_date} – {exp.end_date || 'Present'}]
                 </p>
                 <ul className="mt-3 space-y-1 text-[11px] text-slate-400">
-                  {exp.highlights.map((h, i) => (
-                    <li key={i} className="flex items-center gap-1.5">
-                      &gt; {typeof h === 'string' ? h : h.text}
-                      {typeof h !== 'string' && h.video_url && h.video_url !== '#' && (
-                        <a href={h.video_url} target="_blank" rel="noopener noreferrer" className="text-cyber-teal" title="Video linked">
-                          <Video className="w-3 h-3" />
-                        </a>
-                      )}
-                    </li>
-                  ))}
+                  {(() => {
+                    const rawTexts = exp.highlights || [];
+                    const rawVideos = exp.highlight_video_urls || [];
+                    return rawTexts.map((h: any, i: number) => {
+                      const text = typeof h === 'string' ? h : (h?.text || String(h));
+                      const vUrl = rawVideos[i] || (typeof h !== 'string' ? h?.video_url : null);
+                      return (
+                        <li key={i} className="flex items-center gap-1.5">
+                          &gt; {text}
+                          {vUrl && vUrl !== '#' && (
+                            <a href={vUrl} target="_blank" rel="noopener noreferrer" className="text-cyber-teal" title="Video linked">
+                              <Video className="w-3 h-3" />
+                            </a>
+                          )}
+                        </li>
+                      );
+                    });
+                  })()}
                 </ul>
               </div>
 

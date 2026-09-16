@@ -40,13 +40,20 @@ export default function Timeline({ experiences = [], education = [] }: TimelineP
 
         const extraInfo = isExpItem ? null : (item as Education).grade;
 
-        // Normalize highlights: Experience uses ExperienceHighlight[], Education uses string[]
-        const rawHighlights = isExpItem ? (item as Experience).highlights : (item as Education).details;
-        const highlights: ExperienceHighlight[] = rawHighlights
-          ? rawHighlights.map((h: string | ExperienceHighlight) =>
-              typeof h === 'string' ? { text: h, video_url: null } : h
-            )
-          : [];
+        // Merge highlights text[] + highlight_video_urls text[] into ExperienceHighlight[]
+        let highlights: ExperienceHighlight[] = [];
+        if (isExpItem) {
+          const exp = item as Experience;
+          const texts = exp.highlights || [];
+          const videoUrls = exp.highlight_video_urls || [];
+          highlights = texts.map((text, i) => ({
+            text: typeof text === 'string' ? text : String(text),
+            video_url: videoUrls[i] || null
+          }));
+        } else {
+          const edu = item as Education;
+          highlights = (edu.details || []).map(d => ({ text: d, video_url: null }));
+        }
 
         return (
           <div key={id} className="relative pl-8 group">
