@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut, Cpu, LayoutDashboard, FolderKanban, Briefcase, Award, 
-  Wrench, Settings, Plus, Edit2, Trash2, Save, X, Upload, Github, Link as LinkIcon, BookOpen
+  Wrench, Settings, Plus, Edit2, Trash2, Save, X, Upload, Github, Link as LinkIcon, BookOpen, Video
 } from 'lucide-react';
 import { api } from '../../lib/api';
-import type { Profile, Experience, Skill, Project, ProjectVideo, Presentation, Achievement, Publication } from '../../types';
+import type { Profile, Experience, ExperienceHighlight, Skill, Project, ProjectVideo, Presentation, Achievement, Publication } from '../../types';
 import {
   fallbackProfile,
   fallbackExperiences,
@@ -957,7 +957,8 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
   const [isCurrent, setIsCurrent] = useState(false);
   const [displayOrder, setDisplayOrder] = useState<number>(0);
   const [highlightInput, setHighlightInput] = useState('');
-  const [highlights, setHighlights] = useState<string[]>([]);
+  const [highlightVideoInput, setHighlightVideoInput] = useState('');
+  const [highlights, setHighlights] = useState<ExperienceHighlight[]>([]);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -980,19 +981,29 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
       setDisplayOrder(0);
       setHighlights([]);
       setHighlightInput('');
+      setHighlightVideoInput('');
     }
   }, [editingExp]);
 
   const handleAddHighlight = (e: React.FormEvent) => {
     e.preventDefault();
-    if (highlightInput.trim() && !highlights.includes(highlightInput.trim())) {
-      setHighlights([...highlights, highlightInput.trim()]);
+    if (highlightInput.trim()) {
+      const newHighlight: ExperienceHighlight = {
+        text: highlightInput.trim(),
+        video_url: highlightVideoInput.trim() || null
+      };
+      setHighlights([...highlights, newHighlight]);
       setHighlightInput('');
+      setHighlightVideoInput('');
     }
   };
 
   const handleRemoveHighlight = (idx: number) => {
     setHighlights(highlights.filter((_, i) => i !== idx));
+  };
+
+  const handleUpdateHighlightVideoUrl = (idx: number, url: string) => {
+    setHighlights(highlights.map((h, i) => i === idx ? { ...h, video_url: url || null } : h));
   };
 
     const handleSaveExp = async (e: React.FormEvent) => {
@@ -1138,37 +1149,62 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
             </div>
           </div>
 
-          {/* Highlights */}
+          {/* Highlights with Video URLs */}
           <div className="space-y-3">
             <label className="text-slate-400">Key Highlights / Bullet points</label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={highlightInput}
-                onChange={e => setHighlightInput(e.target.value)}
-                placeholder="Press add to record highlight bullet."
-                className="w-full bg-cyber-bg border border-cyber-border rounded px-3 py-2 text-slate-200 outline-none focus:border-cyber-teal"
-              />
-              <button
-                type="button"
-                onClick={handleAddHighlight}
-                className="px-4 py-2 border border-cyber-teal text-cyber-teal rounded hover:bg-cyber-teal/10"
-              >
-                ADD
-              </button>
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={highlightInput}
+                  onChange={e => setHighlightInput(e.target.value)}
+                  placeholder="Enter highlight bullet text..."
+                  className="w-full bg-cyber-bg border border-cyber-border rounded px-3 py-2 text-slate-200 outline-none focus:border-cyber-teal"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddHighlight}
+                  className="px-4 py-2 border border-cyber-teal text-cyber-teal rounded hover:bg-cyber-teal/10 shrink-0"
+                >
+                  ADD
+                </button>
+              </div>
+              <div className="flex gap-2 items-center">
+                <Video className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                <input
+                  type="text"
+                  value={highlightVideoInput}
+                  onChange={e => setHighlightVideoInput(e.target.value)}
+                  placeholder="Optional: Google Drive video URL for this bullet"
+                  className="w-full bg-cyber-bg border border-cyber-border rounded px-3 py-2 text-slate-200 outline-none focus:border-cyber-teal"
+                />
+              </div>
+              <p className="text-[8px] text-slate-500 font-sans">Add a video URL before pressing ADD to link a demo video to this highlight. You can also edit video URLs on existing bullets below.</p>
             </div>
 
             <ul className="space-y-2 pt-2">
               {highlights.map((h, i) => (
-                <li key={i} className="flex justify-between items-center p-2.5 border border-cyber-border/40 rounded bg-cyber-bg/40">
-                  <span className="text-slate-300 pr-4">&gt; {h}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveHighlight(i)}
-                    className="text-slate-500 hover:text-cyber-orange shrink-0"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                <li key={i} className="p-3 border border-cyber-border/40 rounded bg-cyber-bg/40 space-y-2">
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="text-slate-300 text-xs leading-relaxed">&gt; {h.text}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveHighlight(i)}
+                      className="text-slate-500 hover:text-cyber-orange shrink-0 mt-0.5"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Video className="w-3 h-3 text-cyber-teal/50 shrink-0" />
+                    <input
+                      type="text"
+                      value={h.video_url || ''}
+                      onChange={e => handleUpdateHighlightVideoUrl(i, e.target.value)}
+                      placeholder="Paste Google Drive video link..."
+                      className="w-full bg-cyber-bg/60 border border-cyber-border/60 rounded px-2.5 py-1.5 text-[11px] text-slate-300 outline-none focus:border-cyber-teal"
+                    />
+                  </div>
                 </li>
               ))}
             </ul>
@@ -1194,7 +1230,14 @@ function ExperienceCMSSection({ experiences, onReload, showStatus }: ExpCMSProps
                 </p>
                 <ul className="mt-3 space-y-1 text-[11px] text-slate-400">
                   {exp.highlights.map((h, i) => (
-                    <li key={i}>&gt; {h}</li>
+                    <li key={i} className="flex items-center gap-1.5">
+                      &gt; {typeof h === 'string' ? h : h.text}
+                      {typeof h !== 'string' && h.video_url && h.video_url !== '#' && (
+                        <a href={h.video_url} target="_blank" rel="noopener noreferrer" className="text-cyber-teal" title="Video linked">
+                          <Video className="w-3 h-3" />
+                        </a>
+                      )}
+                    </li>
                   ))}
                 </ul>
               </div>

@@ -12,6 +12,11 @@ export interface Profile {
   updated_at: string;
 }
 
+export interface ExperienceHighlight {
+  text: string;
+  video_url?: string | null;
+}
+
 export interface Experience {
   id: string;
   company: string;
@@ -20,7 +25,7 @@ export interface Experience {
   start_date: string;
   end_date: string | null;
   is_current: boolean;
-  highlights: string[];
+  highlights: ExperienceHighlight[];
   display_order: number;
   created_at: string;
 }

@@ -1,5 +1,5 @@
-import { Calendar, MapPin, Award } from 'lucide-react';
-import type { Experience, Education } from '../types';
+import { Calendar, MapPin, Award, Video } from 'lucide-react';
+import type { Experience, Education, ExperienceHighlight } from '../types';
 
 interface TimelineProps {
   experiences?: Experience[];
@@ -39,7 +39,14 @@ export default function Timeline({ experiences = [], education = [] }: TimelineP
         }
 
         const extraInfo = isExpItem ? null : (item as Education).grade;
-        const highlights = isExpItem ? (item as Experience).highlights : (item as Education).details;
+
+        // Normalize highlights: Experience uses ExperienceHighlight[], Education uses string[]
+        const rawHighlights = isExpItem ? (item as Experience).highlights : (item as Education).details;
+        const highlights: ExperienceHighlight[] = rawHighlights
+          ? rawHighlights.map((h: string | ExperienceHighlight) =>
+              typeof h === 'string' ? { text: h, video_url: null } : h
+            )
+          : [];
 
         return (
           <div key={id} className="relative pl-8 group">
@@ -85,13 +92,24 @@ export default function Timeline({ experiences = [], education = [] }: TimelineP
                 </div>
               </div>
 
-              {/* Bullet highlights */}
+              {/* Bullet highlights with video links */}
               {highlights && highlights.length > 0 && (
                 <ul className="space-y-2">
                   {highlights.map((bullet, idx) => (
                     <li key={idx} className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
                       <span className="text-cyber-teal font-mono mt-0.5 flex-shrink-0 select-none">&gt;</span>
-                      <span>{bullet}</span>
+                      <span className="flex-grow">{bullet.text}</span>
+                      {bullet.video_url && bullet.video_url !== '#' && (
+                        <a
+                          href={bullet.video_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-shrink-0 mt-0.5 p-1 border border-cyber-teal/30 rounded bg-cyber-teal/5 text-cyber-teal hover:bg-cyber-teal/20 hover:border-cyber-teal hover:shadow-[0_0_8px_rgba(0,242,254,0.3)] transition-all duration-200"
+                          title="Watch Demo Video"
+                        >
+                          <Video className="w-3.5 h-3.5" />
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
